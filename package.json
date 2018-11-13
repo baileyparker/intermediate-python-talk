@@ -1,0 +1,33 @@
+{
+  "name": "haskell-talk",
+  "version": "1.0.0",
+  "description": "Introduction to Functional Programming Talk Slides",
+  "main": "index.html",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "npm": "^5.8.0",
+    "sass": "^1.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baileyparker/haskell-talk.git"
+  },
+  "keywords": [
+    "slides",
+    "haskell",
+    "functional",
+    "deck"
+  ],
+  "author": "Bailey Parker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/baileyparker/haskell-talk/issues"
+  },
+  "homepage": "https://github.com/baileyparker/haskell-talk#readme"
+}

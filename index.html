@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <title>Intermediate Python</title>
+
+  <!-- Required stylesheet -->
+  <link rel="stylesheet" media="screen" href="core/deck.core.css">
+
+  <!-- Extension CSS files go here. Remove or add as needed. -->
+  <link rel="stylesheet" media="screen" href="extensions/goto/deck.goto.css">
+  <link rel="stylesheet" media="screen" href="extensions/status/deck.status.css">
+  <link rel="stylesheet" media="screen" href="extensions/scale/deck.scale.css">
+
+  <!-- Style theme. More available in /themes/style/ or create your own. -->
+  <link rel="stylesheet" media="screen" href="themes/style/python.css">
+
+  <!-- Transition theme. More available in /themes/transition/ or create your own. -->
+  <link rel="stylesheet" media="screen" href="themes/transition/fade.css">
+
+  <!-- Basic black and white print styles -->
+  <link rel="stylesheet" media="print" href="core/print.css">
+
+  <!-- Required Modernizr file -->
+  <script src="modernizr.custom.js"></script>
+
+  <link rel="stylesheet" href="highlight/styles/python.css">
+</head>
+<body>
+  <div class="deck-container">
+
+    <section class="slide slide-title">
+      <div class="slide-title-title">
+        <div class="slide-title-group">
+          <div class="slide-title-logo"></div>
+          <h2>Intermediate Python</h2>
+        </div>
+        <h4>Why You Too Should Love Python</h4>
+      </div>
+      <div class="slide-title-byline">
+        <h3>By <strong>Bailey Parker</strong></h3>
+      </div>
+    </section>
+
+
+
+<section class="slide">
+<h2>Pythonic Code</h2>
+<p>As a preview of what's to come, here is how you would check if a number is in
+a range in any other language:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">if 3 &lt;= num and num &lt; 10:
+    pass</code></pre>
+
+<p>And here's how you do it in Python:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">if 3 &lt;= num &lt; 10:
+    pass</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h2>Tuples</h2>
+<p>Tuples are immutable lists. Once they are created, they can't be changed. They
+are used <em>everywhere</em> in Python.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; exam = ('Final Exam', 91)
+
+&gt;&gt;&gt; exam[0]
+'Final Exam'
+&gt;&gt;&gt; exam[1]
+91
+
+# Try to change our grade
+&gt;&gt;&gt; exam[1] = 100
+exception: 'tuple' object does not support item assignment
+
+# A tuple with one element
+&gt;&gt;&gt; singleton = ('one element',)
+</code></pre>
+
+<p>Tuples can be returned from functions.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def compute_statistics(nums):
+    return average(nums), max(nums), stddev(nums)</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Tuples: <span class="child-header">Unpacking</span></h3>
+<p>Tuples can also be <strong>unpacked</strong> into separate variables.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; name, grade = exam
+&gt;&gt;&gt; name
+'Final Exam'
+&gt;&gt;&gt; grade
+91
+</code></pre>
+
+<p>You can also <strong>unpack</strong> multiple layers of tuples (or any iterable).</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; player = ('Shaquille', 'O\'Neal', (7, 1))
+
+&gt;&gt;&gt; first_name, last_name, (feet, inches) = player
+&gt;&gt;&gt; first_name
+'Shaquille'
+&gt;&gt;&gt; last_name
+"O'Neal"
+&gt;&gt;&gt; feet
+7
+&gt;&gt;&gt; inches
+1
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Tuples: <span class="child-header">An Aside on Naming</span></h3>
+<p>Tuples are often convenient ways of quickly packaging related values together.
+However, indexing them by number (ex. <code>exam[0]</code>) may be confusing. Instead, we
+can name a tuple's elements by using <code>namedtuple</code>.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from collections import namedtuple
+
+Height = namedtuple('Height', 'feet inches')
+Player = namedtuple('Player', 'first_name last_name height')</code></pre>
+
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; player = Player('Shaquille', 'O\'Neal', Height(7, 1))
+&gt;&gt;&gt; player.first_name
+'Shaquille'
+&gt;&gt;&gt; player.height.feet
+7
+
+# namedtuples behave like regular tuples (so they can be unpacked)
+&gt;&gt;&gt; first_name, last_name, height = player
+&gt;&gt;&gt; last_name
+"O'Neal"
+&gt;&gt;&gt; height.inches
+1
+</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Strings</h2>
+<p>Python has many commonly used string manipulation functions.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; names = 'Foo, Bar, Baz'
+&gt;&gt;&gt; names.split(', ')
+['Foo', 'Bar', 'Baz']
+&gt;&gt;&gt; ' and '.join(names.split(', '))
+'Foo and Bar and Baz'
+
+&gt;&gt;&gt; time_line = 'Time: 23.4'
+&gt;&gt;&gt; time_line.startswith('Time: ')
+True
+
+# Combining with unpacking provides a powerful way to parse strings
+&gt;&gt;&gt; _, seconds = time_line.split(': ')
+&gt;&gt;&gt; seconds = float(seconds)
+&gt;&gt;&gt; seconds
+23.4
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Strings: <span class="child-header">Formatting</span></h3>
+<p>Python 3.6 introduced f-strings, a convenient way to interpolate variables into
+strings.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; name = 'Forrest Gump'
+&gt;&gt;&gt; birth_year = 1944
+&gt;&gt;&gt; skills = ['ping pong', 'running']
+
+&gt;&gt;&gt; f'{name} was born in {birth_year} and is good at: {skills}'
+"Forrest Gump was born in 1944 and is good at: ['ping pong', 'running']"
+</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Fun with Arguments</h2>
+<p>Arguments can be given default values.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def discount_price(price, discount=0.5):
+    return price * discount</code></pre>
+
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; discount_price(10)
+5.0
+&gt;&gt;&gt; discount_price(10, 0.75)
+7.5
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Fun with Arguments: <span class="child-header">Default Arguments</span></h3>
+<p>Just be careful! Default arguments are only evaluated once (when the function
+is defined), <em>not</em> at every function call.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def record_discount(discount, previous_discounts=[]):
+    previous_discounts.append(discount)
+    return previous_discounts</code></pre>
+
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; record_discount(0.5)
+[0.5]
+&gt;&gt;&gt; record_discount(0.75)
+[0.5, 0.75]
+</code></pre>
+
+<p>The better approach uses <code>None</code> instead:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def record_discount(discount, previous_discounts=None):
+    if previous_discounts is None:
+        previous_discounts = []
+
+    previous_discounts.append(discount)
+    return previous_discounts</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Fun with Arguments: <span class="child-header">Naming Arguments</span></h3>
+<p>Arguments can and should be passed by name to reduce ambiguity. Compare the
+following:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python"># What do these parameters mean?
+search_tweets('@SwiftOnSecurity', 20, True, False)
+
+# Much more clear...
+search_tweets('@SwiftOnSecurity', retweets=False, popular=True, limit=20)</code></pre>
+
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def search_tweets(query, limit, popular, retweets=True):
+    pass</code></pre>
+
+<p>Using names makes your code more clear and also doesn't require you to remember
+parameter order!</p>
+
+</section>
+
+<section class="slide">
+<h3>Fun with Arguments: <span class="child-header">Requiring Argument Names</span></h3>
+<p>You can even require that arguments be passed by name by using <code>*</code>.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def search_tweets(query, *, limit, popular, retweets=True):
+    pass
+
+search_tweets('@SwiftOnSecurity', 20, True, False)</code></pre>
+<pre><div class="pre-name oneline"><span>output</span></div><code>search_tweets() takes 1 positional argument but 4 were given</code></pre>
+
+</section>
+
+<section class="slide">
+<h3>Fun with Arguments: <span class="child-header">Making a <code>sum</code> Function</span></h3>
+<p>Let's use our newfound knowledge of arguments to make a function that sums its
+arguments.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">sum(1, 2, 3)  # 6
+sum(0)        # 0</code></pre>
+
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def sum(start, *nums):
+    total = start
+
+    for num in nums:
+        total += num
+
+    return total</code></pre>
+
+<p>This new <code>*</code> syntax allows us to collect any extra arguments passed to the
+function. We can also use it to expand iterables as if they were passed as
+individual arguments.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">nums = [1, 2, 3]
+sum(*nums)
+# is the same as...
+sum(1, 2, 3)</code></pre>
+
+<p>This syntax even works for tuple unpacking!</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; first, *rest = [1, 2, 3]
+&gt;&gt;&gt; first
+1
+&gt;&gt;&gt; rest
+[2, 3]
+</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Functional Tools</h2>
+<p>In fact, Python already has a built-in <code>sum</code> function that is much more
+powerful.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; sum([1, 2, 3])
+6
+
+# The second parameter is the starting value to add values to
+&gt;&gt;&gt; sum([[1, 2, 3], [4, 5, 6]], [])
+[1, 2, 3, 4, 5, 6]
+</code></pre>
+
+<p>Python provides many more functional tools:</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; min([10, 2, 22, 15])
+2
+&gt;&gt;&gt; max([10, 2, 22, 15])
+22
+&gt;&gt;&gt; sorted([10, 2, 22, 15])
+[2, 10, 15, 22]
+&gt;&gt;&gt; sorted([10, 2, 22, 15], reverse=True)
+[22, 15, 10, 2]
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Functional Tools: <span class="child-header">On Richer Values</span></h3>
+<p>All of these functional tools allow you to specify a <code>key</code> which tells the
+function what value to compare.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; Graded = namedtuple('Graded', 'name grade')
+&gt;&gt;&gt; grades = [Graded('Midterm', 80), Graded('Final', 90), Graded('Project', 0)]
+&gt;&gt;&gt; min(grades, key=lambda x: x.grade)
+Graded(name='Project', grade=0)
+&gt;&gt;&gt; max(grades, key=lambda x: x.grade)
+Graded(name='Final', grade=90)
+&gt;&gt;&gt; sorted(grades, key=lambda x: x.grade, reverse=True)
+[Graded(name='Final', grade=90), Graded(name='Midterm', grade=80), Graded(name='Project', grade=0)]
+</code></pre>
+
+<p><code>lambda</code>s are convenient ways of expressing one line functions. The above one
+is equivalent to:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def get_grade(x):
+    return x.grade</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Functional Tools: <span class="child-header">Iteration</span></h3>
+<p>If you were to port iteration over a list from another language to Python, you
+may arrive at:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for i in range(len(nums)):
+    print(nums[i])</code></pre>
+
+<p>But we don't like explicit indices, because they are error prone. Instead, we
+can just iterate over the list itself:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for num in nums:
+    print(num)</code></pre>
+
+<p>If we need the index, we use <code>enumerate</code>:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for i, num in enumerate(nums):
+    print(i, num)</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Functional Tools: <span class="child-header">Iteration of Multiple Lists</span></h3>
+<p>What if we want to consider values from two lists at once? You may be inclined
+to write:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for i, name in enumerate(students):
+    print(f'{name} got a {grades[i]} in the class')</code></pre>
+
+<p>Instead, we use <code>zip</code> to pair values from iterables together:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for name, grade in zip(students, grades):
+    print(f'{name} got a {grade} in the class')</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Iterables</h2>
+<p>Python is built around the idea of iterables and provides many standard library
+and language features for interacting with and creating them.</p>
+<p>We've already seen that <code>list</code> is an iterable and <code>dict</code> is an iterable, which
+also provides other ways of iteration (<code>.items()</code> and <code>.values()</code>). Most
+collections in Python are iterables. Even files are iterables!</p>
+<p>We know how to iterate through collections, but let's see how we can build our
+own iterables.</p>
+
+</section>
+
+<section class="slide">
+<h3>Iterables: <span class="child-header">Generators</span></h3>
+<p>Generators are a powerful tool for building efficient iterables. Consider
+replicating Python's <code>range()</code>:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def our_range(stop):
+    num = 0
+    nums = []
+
+    while num &lt; stop:
+        print(f'adding {num}')
+        nums.append(num)
+        num += 1
+
+    return nums</code></pre>
+
+<p>What's the problem with this approach?</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for num in our_range(3):
+    print(f'received {num}')</code></pre>
+<pre><div class="pre-name oneline"><span>output</span></div><code>adding 0
+adding 1
+adding 2
+received 0
+received 1
+received 2
+</code></pre>
+
+</section>
+
+<section class="slide">
+<h3>Iterables: Generators: <span class="child-header">Deferred Computation</span></h3>
+<p>Generators use the <code>yield</code> keyword to stop their execution and hand a value
+to the iterator's consumer.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def our_range(stop):
+    num = 0
+
+    while num &lt; stop:
+        print(f'yielding {num}')
+        yield num
+        num += 1</code></pre>
+
+<p>Now, the numbers are generated on the fly:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for num in our_range(3):
+    print(f'received {num}')</code></pre>
+<pre><div class="pre-name oneline"><span>output</span></div><code>yielding 0
+received 0
+yielding 1
+received 1
+yielding 2
+received 2
+</code></pre>
+
+</section>
+
+<section class="slide">
+<h3>Iterables: <span class="child-header">Expressions</span></h3>
+<p>This syntax can be expanded to create terse expressions of <code>list</code>s, <code>dict</code>s,
+and even generators.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; [x * 2 for x in range(4)]
+[0, 2, 4, 6]
+&gt;&gt;&gt; sum(x * 2 for x in range(4))
+12
+&gt;&gt;&gt; {x: x * 2 for x in range(4)}
+{0: 0, 1: 2, 2: 4, 3: 6}
+</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>OOP</h2>
+<p>In many ways, object orientation in Python looks exactly like other languages
+you may be familiar with like Java. There are a few subtle differences, though.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">class Course:
+    def __init__(self, number, name, instructor):
+        self.number = number
+        self.name = name
+        self.instructor = instructor
+        self._student_grades = {}
+
+    def add_student_grade(self, student, grade):
+        self._student_grades[student] = grade
+
+    def curve(self, amount):
+        for student, grade in self._student_grades.items():
+            self.add_student_grade(student, grade + amount)</code></pre>
+
+<p>Notably, Python uses a lot of <code>__x__</code> methods (we call them dunder methods).
+Above, we see that the constructor is called <code>__init__</code>. Additionally, all
+methods take an explicit <code>self</code> parameter, which is similar to <code>this</code> in C++ or
+Java.</p>
+<p>Python has no visibility controls and instead prefers the convention of
+prefixing private/protected properties with an <code>_</code>.</p>
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">Usage</span></h3>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; csf = Course('601.229', 'CSF', 'Peter')
+&gt;&gt;&gt; csf.number
+'601.229'
+&gt;&gt;&gt; csf.add_student_grade('Johnny Hopkins', 85)
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">Inheritance</span></h3>
+<p>Python supports traditional Java-like inheritance (as well as multiple
+inheritance, which we won't delve into).</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">class PassFailCourse(Course):
+    def add_student_grade(self, student, *, passed):
+        super().add_student_grade(student, 100 if passed else 0)</code></pre>
+
+<p>We use <code>super()</code> to access methods from ancestor classes. Other methods (in
+this example, <code>__init__</code> and <code>curve</code>) are inherited as we would expect.</p>
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">Static Methods</span></h3>
+<p>In Python methods on a class are called <strong>class methods</strong>, and we denote them
+by using a decorator.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">class Course:
+    # ...
+
+    @classmethod
+    def retrieve_from_db(cls, number):
+        # Lookup in your database ...
+
+        return cls(number, name, instructor)
+
+
+csf = Course.retrieve_from_db('601.229')</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">An Aside on Decorators</span></h3>
+<p>Decorators are a powerful Python feature that allow you to augment function
+behavior. They are functions that are passed another function and return a new
+function with modified behavior.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def cache(func):
+    func._cache = {}
+
+    def wrapped(url):
+        if url not in func._cache:
+            func._cache[url] = func(url)
+
+        return func._cache[url]
+
+    return wrapped</code></pre>
+
+<p>We then can use <code>cache</code> as a decorator:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">@cache
+def slow_web_request(url):
+    print('requesting page')
+
+    # ...
+
+    return f'page: {url}'</code></pre>
+
+<p>This is equivalent to:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">slow_web_request = cache(slow_web_request)</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">Decorators Demo</span></h3>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; slow_web_request('http://www.google.com')
+requesting page
+'page: http://www.google.com'
+
+&gt;&gt;&gt; slow_web_request('http://www.apple.com')
+requesting page
+'page: http://www.apple.com'
+
+&gt;&gt;&gt; slow_web_request('http://www.apple.com')
+'page: http://www.apple.com'
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">An Aside on Decorators (The Full Story)</span></h3>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from functools import wraps
+
+def cache(func):
+    func._cache = {}
+
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        frozen_args = (args, tuple(sorted(kwargs.items())))
+
+        if frozen_args not in func._cache:
+            func._cache[frozen_args] = func(*args, **kwargs)
+
+        return func._cache[frozen_args]
+
+    return wrapped</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">More Dunder Methods</span></h3>
+<p>There are
+<a href="https://docs.python.org/3/reference/datamodel.html#special-method-names">a ton of dunder methods</a>
+you can define on your classes.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">class Person:
+    def __init__(self, first_name, last_name, age):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
+
+    def __hash__(self):
+        return self.first_name, self.last_name
+
+    def __eq__(self, other):
+        if not isinstance(other, Person):
+            return False
+
+        return self.first_name == other.first_name \
+            and self.last_name == other.last_name \
+            and self.age == other.age
+
+    def __lt__(self, other):
+        return self.age &lt; other.age
+
+    def __str__(self):
+        return f'{self.last_name}, {self.first_name} is {self.age} years old'</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>OOP: <span class="child-header">Cutting out the Boilerplate</span></h3>
+<p>Defining all of these dunder methods can be tedious, so Python 3.7 introduced
+<strong>dataclasses</strong>, which give a much more terse way to express classes.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from dataclasses import dataclass, field
+
+@dataclass
+class Person:
+    first_name: str = field(compare=False)
+    last_name: str = field(compare=False)
+    age: int = field(hash=False)</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2><code>Enum</code>s</h2>
+<p>Enums allow you to replace magic constants with efficient, named placeholders.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from enum import Enum, auto
+
+class Color(Enum):
+    RED = auto()
+    BLUE = auto()
+    PURPLE = auto()</code></pre>
+
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; Color.RED
+&lt;Color.RED: 1&gt;
+&gt;&gt;&gt; Color.RED.name
+'RED'
+&gt;&gt;&gt; Color.RED == Color.BLUE
+False
+&gt;&gt;&gt; list(Color)
+[&lt;Color.RED: 1&gt;, &lt;Color.BLUE: 2&gt;, &lt;Color.PURPLE: 3&gt;]
+</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Exceptions</h2>
+<p>Python prefers a "do first, ask for forgiveness later" approach to exceptional
+cases at runtime. This has the benefit of being safe from data races.</p>
+<p><code>IndexError</code> and <code>KeyError</code> are common when indexing into a sequence or
+accessing a key in a <code>dict</code>-like data structure.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; cities = ['Boston', 'New York City', 'Los Angeles']
+&gt;&gt;&gt; cities[4]
+exception: list index out of range
+
+&gt;&gt;&gt; capitals = {'Maryland': 'Annapolis', 'Connecticut': 'Hartford'}
+&gt;&gt;&gt; capitals['Hawaii']
+exception: 'Hawaii'
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>Exceptions: <span class="child-header">Handling Exceptions</span></h3>
+<p>We handle exceptions in Python using a <code>try</code>/<code>except</code> (and maybe an
+<code>else</code>/<code>finally</code>).</p>
+<p><code>ValueError</code> is commonly used when an argument is in an unexpected format.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">def get_birth_year():
+    while True:
+        try:
+            birth_year = int(input('Enter birth year: '))
+        except ValueError:
+            pass
+        else:
+            if 1900 &lt;= birth_year &lt;= 2018:
+                return birth_year</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>More Data Structures</h2>
+<p>The Python standard library has a plethora of useful data structures.</p>
+<p>Many common tasks in Python can be written as one-liners by combining these
+data structures in clever ways.</p>
+
+</section>
+
+<section class="slide">
+<h3>More Data Structures: <span class="child-header"><code>set</code>s</span></h3>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; unique_nums = set([5, 8, 4, 5, 8])
+&gt;&gt;&gt; unique_nums
+{8, 4, 5}
+
+&gt;&gt;&gt; unique_nums.add(6)
+&gt;&gt;&gt; 6 in unique_nums
+True
+
+&gt;&gt;&gt; len(unique_nums)
+4
+
+&gt;&gt;&gt; unique_nums - set([5, 4])
+{8, 6}
+
+&gt;&gt;&gt; unique_nums | set([8, 4])
+{4, 5, 6, 8}
+</code></pre>
+
+<p>Sets (like most other data structures) can even be created by providing an
+iterable (like a generator):</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; set(x * 2 for x in range(8))
+{0, 2, 4, 6, 8, 10, 12, 14}
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>More Data Structures: <span class="child-header"><code>defaultdict</code></span></h3>
+<p>Behaves like a <code>dict</code>, but returns a default value when a key is not found.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from collections import defaultdict
+
+names = ['Michael', 'Dwight', 'Jim', 'Pam', 'Meredith']
+names_by_first_letter = defaultdict(list)
+
+for name in names:
+    names_by_first_letter[name[0]].append(name)
+
+print(names_by_first_letter)</code></pre>
+<pre><div class="pre-name oneline"><span>output</span></div><code>defaultdict(&lt;class 'list'&gt;, {'M': ['Michael', 'Meredith'], 'D': ['Dwight'], 'J': ['Jim'], 'P': ['Pam']})
+</code></pre>
+<p>Without it, we'd have to write something like:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">names_by_first_letter = {}
+
+for name in names:
+    try:
+        letter_names = names_by_first_letter[name[0]]
+    except KeyError:
+        letter_names = names_by_first_letter[name[0]] = []
+    finally:
+        letter_names.append(name)</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>More Data Structures: <code>defaultdict</code>: <span class="child-header">Another <code>defaultdict</code> example</span></h3>
+<p>When implementing Dijkstra's algorithm, a <code>defaultdict</code> is a convenient way to
+store the distances from the source node.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">import sys
+
+distance_from_source = defaultdict(lambda: sys.maxsize)
+distance_from_source[source] = 0</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>More Data Structures: <code>defaultdict</code>: <span class="child-header">When to not use <code>defaultdict</code></span></h3>
+<p>If we just want to return a default value (and not also store that default
+value), we can use a regular <code>dict</code>:</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; nicknames = {'Robert': 'Bob', 'Kate': 'Katherine'}
+
+&gt;&gt;&gt; nicknames.get('Brenda', 'Brenda')
+'Brenda'
+&gt;&gt;&gt; nicknames
+{'Robert': 'Bob', 'Kate': 'Katherine'}
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>More Data Structures: <span class="child-header"><code>Counter</code></span></h3>
+<p>To keep track of counts of just about anything (including other iterables) use
+<code>Counter</code>.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; from collections import Counter
+
+&gt;&gt;&gt; spellings = Counter(['color', 'colour', 'color', 'color', 'colour'])
+&gt;&gt;&gt; spellings.most_common()
+[('color', 3), ('colour', 2)]
+
+&gt;&gt;&gt; spellings.update(['color', 'color'])
+&gt;&gt;&gt; spellings.most_common(1)
+[('color', 5)]
+</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>More Data Structures: <span class="child-header"><code>deque</code></span></h3>
+<p><code>list</code> has constant-time append and pop (from the end). If you need constant
+time operations at both ends (a queue, instead of a stack), use a <code>deque</code>.</p>
+
+<pre><div class="pre-name oneline"><span>Python REPL</span></div><code class="python">&gt;&gt;&gt; from collections import deque
+
+&gt;&gt;&gt; checkout = deque(['oranges', 'blueberries'])
+
+&gt;&gt;&gt; checkout.append('strawberries')
+&gt;&gt;&gt; checkout
+deque(['oranges', 'blueberries', 'strawberries'])
+
+&gt;&gt;&gt; checkout.appendleft('eggs')
+&gt;&gt;&gt; checkout
+deque(['eggs', 'oranges', 'blueberries', 'strawberries'])
+
+&gt;&gt;&gt; checkout.popleft()
+'eggs'
+</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>File I/O</h2>
+<p>File handling (and resource management) in Python is a breeze thanks to
+<strong>context managers</strong>. These provide automatic cleanup of resources by using a
+<code>with</code> statement.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python"># By default, files are opened for reading
+with open('essay.txt') as f:
+    essay = f.read()</code></pre>
+
+<p>This is almost equivalent to the following, but with one important distinction:
+<strong>exception handling!</strong></p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">f = open('essay.txt')
+
+essay = f.read()
+# What if an exception happens here?
+
+f.close()</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>File I/O: <span class="child-header">Examples</span></h3>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python"># By default, files are opened for reading
+with open('essay.txt') as f:
+    essay = f.read()
+
+translated = translate(essay, from_language='english',
+                       to_language='french')
+
+# 'w' truncates the file, then opens it for writing
+with open('essay_translated.txt', 'w') as f:
+    print(translated, file=f)</code></pre>
+
+<p>Reading a file line-by-line is also straightforward.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python"># Each line in urls.txt contains a url
+with open('urls.txt') as f:
+    for url in f:
+        download_file(url)</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>File I/O: <span class="child-header">CSV</span></h3>
+<p>Python makes reading CSVs super simple.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">import csv
+
+with open('games.csv') as f:
+    for home_team, away_team, score in csv.reader(f):
+        print(f'{away_team} @ {home_team}: {score}')</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>File I/O: <span class="child-header">Gzip</span></h3>
+<p>And handling compressed data is just requires a slight modification.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">import csv
+import gzip
+
+with gzip.open('games.csv.gz') as f:
+    for home_team, away_team, score in csv.reader(f):
+        print(f'{away_team} @ {home_team}: {score}')</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>File I/O: <span class="child-header">Pickle Serialization</span></h3>
+<p>Python provides a serialization method that works out of the box for every
+standard library class and almost every class you'll create:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">import pickle
+
+with open('dump.pkl', 'wb') as f:
+    pickle.dump(f, my_object)
+
+# Then later...
+with open('dump.pkl', 'rb') as f:
+    my_object = pickle.load(f)</code></pre>
+
+
+</section>
+
+<section class="slide">
+<h3>File I/O: <span class="child-header">JSON Serialization</span></h3>
+<p>JSON serialization can be done in an almost identical way.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">import json
+
+with open('dump.json', 'w') as f:
+    json.dump(f, my_dict)
+
+# Then later...
+with open('dump.json', 'r') as f:
+    my_dict = json.load(f)</code></pre>
+
+<p>JSON can be dumped/loaded to a string with <code>json.dumps()</code> and <code>json.loads()</code>.</p>
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Paths</h2>
+<p>Python 3.4 added a new API for handling file system paths in a cross-platform
+manner.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from pathlib import Path
+
+# Finds all files of the form logs/*.log
+log_files = (Path.cwd() / 'logs').glob('*.log')
+# If files have form 20181112.log, builds a list of the timestamps
+log_timestamps = [p.stem for p in log_files]
+
+data_dir = Path.cwd() / 'dir'
+
+# We can even open files given a path
+train_file = (data_dir / 'train').open()
+dev_dev = (data_dir / 'dev').open()
+test_test = (data_dir / 'test').open()</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Multiprocessing</h2>
+<p>If you have some computationally expensive process run on an iterable, Python's
+standard library makes it easy to distribute it across your computer's cores.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">for x in inputs:
+    print(long_computation(x))</code></pre>
+
+<p>For an effortless speedup:</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from multiprocessing import Pool
+
+with Pool() as pool:
+    for x in pool.map(long_computation, inputs):
+        print(x)</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Command Line Arguments</h2>
+<p>Python is often used for building command line utilities, so parsing arguments
+is a common task. Fortunately, the standard library provides an incredibly
+comprehensive library for doing most of the heavy lifting.</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from argparse import ArgumentParser, FileType
+
+parser = ArgumentParser(description='processes some input files')
+
+parser.add_argument('files', type=FileType('r'), nargs='+', help='input files')
+parser.add_argument('--mode', choices=list(Mode), default=Mode.CONCAT)
+parser.add_argument('--limit', type=int, default=10,
+                    help='limit the number of lines')
+parser.add_argument('-v', dest='verbose', action='store_true')
+
+# Parses arguments like:
+#   foo.txt bar.txt -v --limit 100
+#
+args = parser.parse_args()
+
+# A list of already opened files passed as CLI args
+args.files
+
+# The mode enum
+args.mode
+
+# The limit passed (or the default)
+args.limit</code></pre>
+
+<p>Learning how to use <code>argparse</code> is a key Python skill.</p>
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Unit Testing</h2>
+<p>Python's standard library also makes it really simple to test your code. You
+have no excuse not to!</p>
+
+<pre><div class="pre-name oneline"><span>python</span></div><code class="python">from my_package import Calculator
+from unittest import main, TestCase
+
+
+class TestCalculator(TestCase):
+    def setUp(self):
+        self.calculator = Calculator()
+
+    def test_add(self):
+        self.assertEqual(4, self.calculator.add(2, 2))
+
+    def test_divide_by_zero(self):
+        with self.assertRaises(DivisionByZeroError):
+            self.calculator.divide(2, 0)
+
+
+if __name__ == '__main__':
+    main()</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Web Scraping</h2>
+<p>We'll combine everything that we've learned to build a tool that uses
+<code>requests</code> and <code>bs4</code> to check if a person is still alive (according to
+Wikipedia).</p>
+
+<pre><div class="pre-name oneline"><span>shell</span></div><code class="shell">$ python3 -m pip install pipenv
+$ pipenv install requests bs4</code></pre>
+
+<!---------------------------------------------------------------------------->
+
+
+</section>
+
+<section class="slide">
+<h2>Final Thoughts</h2>
+<ul>
+<li>As with any skill, the only way to improve is to practice!</li>
+<li>Find small tasks that need automating or menial things and try to write a
+script to help you</li>
+<li>Try out Python libraries like Django, Flask, and PyTorch for more domain
+specific experience</li>
+<li>Watch talks by Raymond Hettinger (he's a Python core developer and a
+fantastic speaker)</li>
+</ul>
+
+    </section>
+
+    <!-- End slides. -->
+
+    <!-- Begin extension snippets. Add or remove as needed. -->
+
+    <!-- deck.status snippet -->
+    <p class="deck-status" aria-role="status">
+      <span class="deck-status-current"></span>
+      /
+      <span class="deck-status-total"></span>
+    </p>
+
+    <!-- deck.goto snippet -->
+    <form action="." method="get" class="goto-form">
+      <label for="goto-slide">Go to slide:</label>
+      <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+      <datalist id="goto-datalist"></datalist>
+      <input type="submit" value="Go">
+    </form>
+
+    <!-- End extension snippets. -->
+  </div>
+
+<!-- Required JS files. -->
+<script src="jquery.min.js"></script>
+<script src="core/deck.core.js"></script>
+
+<!-- Extension JS files. Add or remove as needed. -->
+<script src="highlight/highlight.pack.js"></script>
+<script src="extensions/goto/deck.goto.js"></script>
+<script src="extensions/status/deck.status.js"></script>
+<script src="extensions/scale/deck.scale.js"></script>
+
+<!-- Initialize the deck. You can put this in an external file if desired. -->
+<script>
+  $(function() {
+    $.deck('.slide');
+  });
+
+  hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
+
